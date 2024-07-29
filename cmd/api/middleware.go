@@ -14,9 +14,9 @@ func (app *application) recoverPanic(next http.Handler) (http.Handler) {
         // closes current connection after a response has been sent
         w.Header().Set("connection", "close")
         // recover() returns type any so we format it into type error and log error use helper function 
-        app.serverErrorResponse(w, r, fmt.Error("%s", err))
+        app.serverErrorResponse(w, r, fmt.Errorf("%s", err))
       }
     }()
-    next.ServeHttp(w, r)
+    next.ServeHTTP(w, r)
   })
 }
