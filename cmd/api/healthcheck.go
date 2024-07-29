@@ -18,10 +18,7 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
   // pass map th json marshal
   err := app.writeJSON(w, http.StatusOK, env, nil)
   if err != nil {
-    // log error
-    app.logger.Error(err.Error())
-    // send client generic error
-    http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+    app.serverErrorResponse(w, r, err)
   }
     
 }

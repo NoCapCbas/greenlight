@@ -30,3 +30,7 @@ configuration files and setup scripts for production server
 ```bash
 go run ./cmd/api -port=3030 -env=development
 ```
+
+This project is for educational purpose.
+Source: Let's Go Further By Alex Edwards
+On page: 72
