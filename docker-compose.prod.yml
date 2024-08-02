@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: greenlight
+    ports:
+      - "8087:4000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+

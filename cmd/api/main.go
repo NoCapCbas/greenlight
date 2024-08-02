@@ -37,7 +37,7 @@ func main() {
   flag.IntVar(&cfg.port, "port", 4000, "API Server Port")
   flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
   // database dsn
-  flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:password@host/postgres", "PostgreSQL DSN")
+  flag.StringVar(&cfg.db.dsn, "db-dsn", fmt.Sprintf("postgres://%s:%s@%s/%s", os.Getenv("POSTGRES_USERNAME"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_DATABASE")), "PostgreSQL DSN")
   flag.Parse()
   // Initialize structured logger which writes log entries to standard stream
   logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
