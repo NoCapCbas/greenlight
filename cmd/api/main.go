@@ -37,11 +37,19 @@ func main() {
   flag.IntVar(&cfg.port, "port", 4000, "API Server Port")
   flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
   // database dsn
-  flat.StringVar(&cfg.env, "db-dsn", "postgres://oVnhYTogjkr9DgcK:xUdpnMQPPINrUk11AOs56wIFbUl0PrMv@localhost/postgres", "PostgreSQL DSN")
+  flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:password@host/postgres", "PostgreSQL DSN")
   flag.Parse()
   // Initialize structured logger which writes log entries to standard stream
   logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
   
+  db, err := openDB(cfg)
+  if err != nil {
+    logger.Error(err.Error())
+    os.Exit(1)
+  }
+  defer db.Close()
+  logger.Info("database connection pool established")
+
   // declare application
   app := &application{
     config: cfg,
@@ -60,15 +68,32 @@ func main() {
   // Start http server
   logger.Info("starting server", "addr", srv.Addr, "env", cfg.env)
 
-  err := srv.ListenAndServe()
+  err = srv.ListenAndServe()
   logger.Error(err.Error())
   os.Exit(1)
 
 }
 
+func openDB(cfg config) (*sql.DB, error) {
+  // create empty pool connection
+  fmt.Println(cfg.db.dsn)
+  db, err := sql.Open("postgres", cfg.db.dsn)
+  if err != nil {
+    return nil, err
+  }
+  
+  // create context with a 5-second timeout deadline
+  ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+  defer cancel()
+ 
+  err = db.PingContext(ctx)
+  if err != nil {
+    fmt.Println("failed")
+    db.Close()
+    return nil, err
+  }
 
-
-
-
+  return db, nil
+}
 
 
