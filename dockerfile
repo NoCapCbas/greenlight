@@ -17,7 +17,7 @@ COPY . .
 RUN go build -o main ./cmd/api
 
 # Stage 2: Create a smaller image with only the necessary runtime
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Set the Current Working Directory inside the container
 WORKDIR /root/

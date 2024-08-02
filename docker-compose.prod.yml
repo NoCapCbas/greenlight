@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  api:
+  greenlight:
     build:
       context: .
       dockerfile: dockerfile
-    container_name: greenlight
+    container_name: greenlight_api
     ports:
       - "8087:4000"
     env_file:
