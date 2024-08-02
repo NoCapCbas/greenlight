@@ -1,12 +1,16 @@
 package main
 
 import (
+  "context"
+  "database/sql"
   "log/slog"
   "flag"
   "net/http"
   "os"
   "time"
   "fmt"
+
+  _ "github.com/lib/pq"
 )
 
 // Application version number
@@ -16,6 +20,9 @@ const version = "1.0.0"
 type config struct {
   port int
   env string
+  db struct {
+    dsn string
+  }
 }
 // Holds application dependencies
 type application struct {
@@ -29,6 +36,8 @@ func main() {
   // Config variables set via flags
   flag.IntVar(&cfg.port, "port", 4000, "API Server Port")
   flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
+  // database dsn
+  flat.StringVar(&cfg.env, "db-dsn", "postgres://oVnhYTogjkr9DgcK:xUdpnMQPPINrUk11AOs56wIFbUl0PrMv@localhost/postgres", "PostgreSQL DSN")
   flag.Parse()
   // Initialize structured logger which writes log entries to standard stream
   logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
