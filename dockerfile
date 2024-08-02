@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o main cmd/api/main.go
+RUN go build -o main ./cmd/api
 
 # Stage 2: Create a smaller image with only the necessary runtime
 FROM debian:bullseye-slim
